@@ -6,48 +6,80 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const form = document.getElementById('equipamento-form');
 const tabelaCorpo = document.getElementById('tabela-corpo');
 
-// Carrega os dados do banco assim que a página abrir
-document.addEventListener('DOMContentLoaded', carregarDados);
+// Inicia verificando se já existe alguém logado
+document.addEventListener('DOMContentLoaded', async () => {
+    const { data: { session } } = await _supabase.auth.getSession();
+    configurarInterface(session);
+    carregarDados();
+});
 
-async function carregarDados() {
-    const { data, error } = await _supabase.from('equipamentos').select('*');
-    if (error) return console.error('Erro ao buscar:', error);
+// FUNÇÕES DE AUTENTICAÇÃO
+async function fazerLogin() {
+    const email = prompt("E-mail do Administrador:");
+    const password = prompt("Senha:");
     
-    tabelaCorpo.innerHTML = '';
-    data.forEach(item => adicionarLinhaTabela(item));
+    const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+    
+    if (error) alert("Acesso negado: " + error.message);
+    else location.reload();
 }
 
-form.addEventListener('submit', async function(event) {
-    event.preventDefault();
+async function fazerLogout() {
+    await _supabase.auth.signOut();
+    location.reload();
+}
 
-    const novoEquipamento = {
+function configurarInterface(session) {
+    const btnLogin = document.getElementById('btn-login');
+    const userInfo = document.getElementById('user-info');
+    const cadastroSection = document.getElementById('cadastro');
+
+    if (session) {
+        btnLogin.style.display = 'none';
+        userInfo.style.display = 'block';
+        cadastroSection.style.display = 'block';
+        document.getElementById('user-email').innerText = session.user.email;
+    }
+}
+
+// FUNÇÕES DO BANCO DE DADOS
+async function carregarDados() {
+    const { data, error } = await _supabase.from('equipamentos').select('*').order('created_at', { ascending: false });
+    if (error) console.error(error);
+    else {
+        tabelaCorpo.innerHTML = '';
+        data.forEach(item => adicionarLinhaTabela(item));
+    }
+}
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const novo = {
         nome: document.getElementById('nome').value,
         serie: document.getElementById('serie').value,
         status: document.getElementById('status').value
     };
 
-    const { error } = await _supabase.from('equipamentos').insert([novoEquipamento]);
-
-    if (error) alert('Erro ao salvar no banco!');
-    else {
-        carregarDados();
-        form.reset();
-    }
+    const { error } = await _supabase.from('equipamentos').insert([novo]);
+    if (error) alert("Erro: Você precisa estar logado para cadastrar!");
+    else { carregarDados(); form.reset(); }
 });
 
 function adicionarLinhaTabela(item) {
-    const novaLinha = document.createElement('tr');
-    novaLinha.innerHTML = `
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
         <td>${item.nome}</td>
         <td>${item.serie}</td>
-        <td>${item.status}</td>
-        <td><button onclick="removerItem(${item.id})">Excluir</button></td>
+        <td><span class="status-tag ${item.status}">${item.status}</span></td>
+        <td><button onclick="removerItem(${item.id})" class="btn-del">Excluir</button></td>
     `;
-    tabelaCorpo.appendChild(novaLinha);
+    tabelaCorpo.appendChild(tr);
 }
 
 async function removerItem(id) {
-    const { error } = await _supabase.from('equipamentos').delete().eq('id', id);
-    if (error) alert('Erro ao deletar!');
-    else carregarDados();
+    if (confirm("Deseja excluir este item?")) {
+        const { error } = await _supabase.from('equipamentos').delete().eq('id', id);
+        if (error) alert("Erro: Apenas administradores logados podem excluir.");
+        else carregarDados();
+    }
 }
