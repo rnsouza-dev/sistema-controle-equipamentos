@@ -1,11 +1,14 @@
-# Olá, eu sou o rnsouza-dev! 🚀
+# 🛠️ Sistema de Controle de Equipamentos
 
-Sou um desenvolvedor focado em criar soluções reais para desafios de TI e gestão operacional.
+Projeto desenvolvido para gerenciar o inventário de TI, permitindo o controle de entradas, saídas e manutenção de equipamentos.
 
-### 🛠 Tecnologias que estou aprendendo:
-- Javascript / Node.js
-- Bancos de Dados SQL
-- HTML & CSS
+## 🚀 Funcionalidades Planejadas
+- Cadastro de equipamentos e usuários.
+- Registro de empréstimos e devoluções.
+- Histórico de movimentações por funcionário.
+- Dashboard visual do status do inventário.
 
-### 📂 Projeto em Destaque:
-- **[Controle de Equipamentos]:** Sistema Full Stack para gestão de inventário técnico (Em desenvolvimento).
+## 🛠️ Tecnologias
+- **Frontend:** HTML5, CSS3, JavaScript.
+- **Backend:** Node.js (Planejado).
+- **Banco de Dados:** SQLite ou PostgreSQL (Planejado).
