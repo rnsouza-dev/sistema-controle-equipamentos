@@ -1,37 +1,52 @@
-// Selecionando os elementos do HTML
 const form = document.getElementById('equipamento-form');
 const tabelaCorpo = document.getElementById('tabela-corpo');
 
-// Escutando o evento de envio do formulário
+// Carrega os dados assim que a página abre
+document.addEventListener('DOMContentLoaded', carregarDados);
+
 form.addEventListener('submit', function(event) {
-    event.preventDefault(); // Impede a página de recarregar
+    event.preventDefault();
 
-    // Pegando os valores dos campos
-    const nome = document.getElementById('nome').value;
-    const serie = document.getElementById('serie').value;
-    const status = document.getElementById('status').value;
+    const novoItem = {
+        nome: document.getElementById('nome').value,
+        serie: document.getElementById('serie').value,
+        status: document.getElementById('status').value
+    };
 
-    // Criando uma nova linha na tabela
-    adicionarLinhaTabela(nome, serie, status);
-
-    // Limpando o formulário
+    salvarEquipamento(novoItem);
+    adicionarLinhaTabela(novoItem);
     form.reset();
 });
 
-function adicionarLinhaTabela(nome, serie, status) {
+function adicionarLinhaTabela(item) {
     const novaLinha = document.createElement('tr');
-
     novaLinha.innerHTML = `
-        <td>${nome}</td>
-        <td>${serie}</td>
-        <td><span class="status-tag ${status}">${status}</span></td>
-        <td><button onclick="removerLinha(this)">Excluir</button></td>
+        <td>${item.nome}</td>
+        <td>${item.serie}</td>
+        <td>${item.status}</td>
+        <td><button onclick="removerItem('${item.serie}', this)" style="background-color: #dc3545; color: white; border: none; padding: 5px; cursor: pointer;">Excluir</button></td>
     `;
-
     tabelaCorpo.appendChild(novaLinha);
 }
 
-function removerLinha(botao) {
-    // Remove a linha (tr) que contém o botão clicado
+function salvarEquipamento(item) {
+    // Busca o que já tem ou cria uma lista vazia
+    let equipamentos = JSON.parse(localStorage.getItem('equipamentos')) || [];
+    equipamentos.push(item);
+    // Salva de volta no "baú" do navegador
+    localStorage.setItem('equipamentos', JSON.stringify(equipamentos));
+}
+
+function carregarDados() {
+    let equipamentos = JSON.parse(localStorage.getItem('equipamentos')) || [];
+    equipamentos.forEach(item => adicionarLinhaTabela(item));
+}
+
+function removerItem(serie, botao) {
+    let equipamentos = JSON.parse(localStorage.getItem('equipamentos')) || [];
+    // Filtra a lista para remover o item com aquela série
+    equipamentos = equipamentos.filter(item => item.serie !== serie);
+    localStorage.setItem('equipamentos', JSON.stringify(equipamentos));
+    // Remove a linha da tabela visualmente
     botao.parentElement.parentElement.remove();
 }
