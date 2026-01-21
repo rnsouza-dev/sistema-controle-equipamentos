@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Equipamentos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Gestão de Inventário de TI</h1>
+    </header>
+
+    <main>
+        <section id="cadastro">
+            <h2>Cadastrar Novo Equipamento</h2>
+            <form id="equipamento-form">
+                <input type="text" id="nome" placeholder="Nome do Equipamento (ex: Notebook)" required>
+                <input type="text" id="serie" placeholder="Nº de Série / Patrimônio" required>
+                <select id="status">
+                    <option value="disponivel">Disponível</option>
+                    <option value="uso">Em Uso</option>
+                    <option value="manutencao">Manutenção</option>
+                </select>
+                <button type="submit">Adicionar</button>
+            </form>
+        </section>
+
+        <hr>
+
+        <section id="lista">
+            <h2>Equipamentos Cadastrados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Série</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-corpo">
+                    </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
