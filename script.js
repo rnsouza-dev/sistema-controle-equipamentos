@@ -1,4 +1,4 @@
-// Use as chaves que você já pegou nas suas fotos
+
 const SUPABASE_URL = 'https://pszgonbaqlhtzlcxspvd.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzemdvbmJhcWxodHpsY3hzcHZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMDgzODcsImV4cCI6MjA4NDU4NDM4N30.7dlyd31-6y4_HyaLVFCajjqBQQFOQI47_o26buPWFaI'; 
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
