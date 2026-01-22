@@ -73,7 +73,10 @@ form.addEventListener('submit', async (e) => {
         else {
             alert("Equipamento atualizado!");
             idEdicao = null;
-            form.querySelector('button').innerText = "Adicionar"; // Volta o botão ao normal
+            const btn = form.querySelector('button');
+            btn.innerText = "Adicionar"; 
+            btn.style.backgroundColor = ""; // Volta para a cor original do CSS
+            btn.style.color = "";
         }
     } 
     else {
@@ -95,9 +98,12 @@ async function prepararEdicao(id, nome, serie, status) {
     document.getElementById('serie').value = serie;
     document.getElementById('status').value = status;
 
-    idEdicao = id; // Ativa o modo de edição
-    form.querySelector('button').innerText = "Salvar Alterações";
-    form.scrollIntoView(); // Faz a tela subir para o formulário
+    idEdicao = id; 
+    const btn = form.querySelector('button');
+    btn.innerText = "Salvar Alterações";
+    btn.style.backgroundColor = "#ffc107"; // Cor amarela para indicar edição
+    btn.style.color = "black";
+    form.scrollIntoView({ behavior: 'smooth' }); 
 }
 
 function adicionarLinhaTabela(item) {
