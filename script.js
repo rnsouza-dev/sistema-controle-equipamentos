@@ -128,24 +128,25 @@ async function removerItem(id) {
     }
 }
 
-// 1. Seleciona o campo de entrada
-const inputBusca = document.getElementById('inputBusca');
+// Seleciona o campo de busca (o retângulo onde você digita "ss")
+const inputBusca = document.querySelector('input[type="text"]:not([id])') || document.querySelector('input[placeholder*="Buscar"]');
 
-// 2. Escuta quando o usuário digita algo
-inputBusca.addEventListener('keyup', function() {
-    const termo = inputBusca.value.toLowerCase(); // Texto buscado em minúsculo
-    const linhas = tabelaCorpo.getElementsByTagName('tr'); // Pega todas as linhas da tabela
+if (inputBusca) {
+    inputBusca.addEventListener('keyup', function() {
+        const termo = inputBusca.value.toLowerCase();
+        const linhas = tabelaCorpo.getElementsByTagName('tr');
 
-    // 3. Percorre cada linha para decidir se mostra ou esconde
-    Array.from(linhas).forEach(linha => {
-        const textoNome = linha.children[0].textContent.toLowerCase();
-        const textoSerie = linha.children[1].textContent.toLowerCase();
+        Array.from(linhas).forEach(linha => {
+            // Pega o texto das colunas Nome (0) e Série (1)
+            const nome = linha.children[0].textContent.toLowerCase();
+            const serie = linha.children[1].textContent.toLowerCase();
 
-        // Se o termo estiver no Nome OU na Série, a linha fica visível
-        if (textoNome.includes(termo) || textoSerie.includes(termo)) {
-            linha.style.display = "";
-        } else {
-            linha.style.display = "none";
-        }
+            // Se o termo estiver no nome ou na série, mostra a linha
+            if (nome.includes(termo) || serie.includes(termo)) {
+                linha.style.display = "";
+            } else {
+                linha.style.display = "none";
+            }
+        });
     });
-});
+}
