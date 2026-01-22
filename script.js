@@ -63,22 +63,26 @@ form.addEventListener('submit', async (e) => {
     };
 
     if (idEdicao) {
-        // MODO EDIÇÃO: Atualiza o item existente
-        const { error } = await _supabase
+        // MODO EDIÇÃO: Tenta atualizar o item no banco
+        const { error, status } = await _supabase
             .from('equipamentos')
             .update(dados)
             .eq('id', idEdicao);
 
-        if (error) alert("Erro ao atualizar: " + error.message);
-        else {
-            alert("Equipamento atualizado!");
+        // verificamos se houve erro 
+        // ou se o status retornado indica que nada foi alterado (comum em RLS)
+        if (error || status === 403 || status === 401) {
+            alert("Acesso Negado: Somente administradores logados podem editar equipamentos.");
+            console.error("Erro na atualização:", error);
+        } else {
+            alert("Equipamento atualizado com sucesso!");
             idEdicao = null;
             const btn = form.querySelector('button');
             btn.innerText = "Adicionar"; 
-            btn.style.backgroundColor = ""; // Volta para a cor original do CSS
+            btn.style.backgroundColor = ""; 
             btn.style.color = "";
         }
-    } 
+    }
     else {
         // MODO CRIAÇÃO: Insere um novo item
         const { error } = await _supabase
