@@ -127,3 +127,30 @@ async function removerItem(id) {
         else carregarDados();
     }
 }
+
+// Seleciona o campo de busca
+const inputBusca = document.getElementById('inputBusca');
+
+// Adiciona um evento de "escuta" para cada tecla digitada
+inputBusca.addEventListener('keyup', function() {
+    const termoBusca = inputBusca.value.toLowerCase(); // Texto digitado em minúsculo
+    const linhas = tabelaCorpo.getElementsByTagName('tr'); // Pega todas as linhas da tabela
+
+    // Percorre cada linha da tabela
+    for (let i = 0; i < linhas.length; i++) {
+        const colunaNome = linhas[i].getElementsByTagName('td')[0]; // Coluna Nome
+        const colunaSerie = linhas[i].getElementsByTagName('td')[1]; // Coluna Série
+
+        if (colunaNome || colunaSerie) {
+            const textoNome = colunaNome.textContent.toLowerCase();
+            const textoSerie = colunaSerie.textContent.toLowerCase();
+
+            // Se o termo de busca estiver no nome ou na série, mostra a linha. Senão, esconde.
+            if (textoNome.includes(termoBusca) || textoSerie.includes(termoBusca)) {
+                linhas[i].style.display = "";
+            } else {
+                linhas[i].style.display = "none";
+            }
+        }
+    }
+});
