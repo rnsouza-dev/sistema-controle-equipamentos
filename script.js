@@ -1,4 +1,4 @@
-
+let idEdicao = null; // Guarda o ID do item que está a ser editado
 const SUPABASE_URL = 'https://pszgonbaqlhtzlcxspvd.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzemdvbmJhcWxodHpsY3hzcHZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMDgzODcsImV4cCI6MjA4NDU4NDM4N30.7dlyd31-6y4_HyaLVFCajjqBQQFOQI47_o26buPWFaI'; 
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -52,18 +52,53 @@ async function carregarDados() {
     }
 }
 
+// MODIFICADO: Evento de Submit (serve para Criar e para Editar)
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const novo = {
+
+    const dados = {
         nome: document.getElementById('nome').value,
         serie: document.getElementById('serie').value,
         status: document.getElementById('status').value
     };
 
-    const { error } = await _supabase.from('equipamentos').insert([novo]);
-    if (error) alert("Erro: Você precisa estar logado para cadastrar!");
-    else { carregarDados(); form.reset(); }
+    if (idEdicao) {
+        // MODO EDIÇÃO: Atualiza o item existente
+        const { error } = await _supabase
+            .from('equipamentos')
+            .update(dados)
+            .eq('id', idEdicao);
+
+        if (error) alert("Erro ao atualizar: " + error.message);
+        else {
+            alert("Equipamento atualizado!");
+            idEdicao = null;
+            form.querySelector('button').innerText = "Adicionar"; // Volta o botão ao normal
+        }
+    } 
+    else {
+        // MODO CRIAÇÃO: Insere um novo item
+        const { error } = await _supabase
+            .from('equipamentos')
+            .insert([dados]);
+
+        if (error) alert("Erro ao salvar: " + error.message);
+    }
+
+    carregarDados();
+    form.reset();
 });
+
+// NOVA FUNÇÃO: Prepara o formulário para edição
+async function prepararEdicao(id, nome, serie, status) {
+    document.getElementById('nome').value = nome;
+    document.getElementById('serie').value = serie;
+    document.getElementById('status').value = status;
+
+    idEdicao = id; // Ativa o modo de edição
+    form.querySelector('button').innerText = "Salvar Alterações";
+    form.scrollIntoView(); // Faz a tela subir para o formulário
+}
 
 function adicionarLinhaTabela(item) {
     const tr = document.createElement('tr');
@@ -71,7 +106,10 @@ function adicionarLinhaTabela(item) {
         <td>${item.nome}</td>
         <td>${item.serie}</td>
         <td><span class="status-tag ${item.status}">${item.status}</span></td>
-        <td><button onclick="removerItem(${item.id})" class="btn-del">Excluir</button></td>
+        <td>
+            <button onclick="prepararEdicao(${item.id}, '${item.nome}', '${item.serie}', '${item.status}')" style="background-color: #ffc107; color: black; border: none; padding: 5px; cursor: pointer; border-radius: 4px;">Editar</button>
+            <button onclick="removerItem(${item.id})" class="btn-del">Excluir</button>
+        </td>
     `;
     tabelaCorpo.appendChild(tr);
 }
