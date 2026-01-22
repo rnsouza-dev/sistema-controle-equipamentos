@@ -52,19 +52,20 @@ async function carregarDados() {
     }
 }
 
-// MODIFICADO: Evento de Submit para Colaboradores
+// EVENTO SUBMIT CORRIGIDO
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    // Mapeamos os campos novos para as colunas antigas do banco
     const dados = {
         nome: document.getElementById('nome').value,
-        usuario: document.getElementById('usuario').value, // Antes era 'serie'
-        turno: document.getElementById('turno').value      // Antes era 'status'
+        serie: document.getElementById('usuario').value, // Envia 'usuario' para a coluna 'serie'
+        status: document.getElementById('turno').value   // Envia 'turno' para a coluna 'status'
     };
 
     if (idEdicao) {
         const { error, status } = await _supabase
-            .from('equipamentos') // Mantendo o nome da tabela no banco por enquanto
+            .from('equipamentos')
             .update(dados)
             .eq('id', idEdicao);
 
@@ -74,6 +75,7 @@ form.addEventListener('submit', async (e) => {
             alert("Colaborador atualizado!");
             idEdicao = null;
             form.querySelector('button').innerText = "Adicionar";
+            form.querySelector('button').style.backgroundColor = "";
         }
     } else {
         const { error } = await _supabase.from('equipamentos').insert([dados]);
@@ -83,28 +85,28 @@ form.addEventListener('submit', async (e) => {
     form.reset();
 });
 
-// NOVA FUNÇÃO: Prepara o formulário para edição
-async function prepararEdicao(id, nome, serie, status) {
+// FUNÇÃO PREPARAR EDIÇÃO CORRIGIDA
+async function prepararEdicao(id, nome, usuario, turno) {
     document.getElementById('nome').value = nome;
-    document.getElementById('serie').value = serie;
-    document.getElementById('status').value = status;
+    document.getElementById('usuario').value = usuario;
+    document.getElementById('turno').value = turno;
 
     idEdicao = id; 
     const btn = form.querySelector('button');
     btn.innerText = "Salvar Alterações";
-    btn.style.backgroundColor = "#ffc107"; // Cor amarela para indicar edição
+    btn.style.backgroundColor = "#ffc107";
     btn.style.color = "black";
     form.scrollIntoView({ behavior: 'smooth' }); 
 }
 
-// MODIFICADO: Função que desenha a tabela
+// FUNÇÃO ADICIONAR LINHA CORRIGIDA
 function adicionarLinhaTabela(item) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
         <td>${item.nome}</td>
-        <td>${item.usuario}</td> <td>${item.turno}</td>   <td>
-            <button onclick="prepararEdicao(${item.id}, '${item.nome}', '${item.usuario}', '${item.turno}')" style="background-color: #ffc107; color: black; border: none; padding: 5px; cursor: pointer; border-radius: 4px;">Editar</button>
-            <button onclick="removerItem(${item.id})" class="btn-del">Excluir</button>
+        <td>${item.serie}</td> <td>${item.status}</td> <td>
+            <button onclick="prepararEdicao(${item.id}, '${item.nome}', '${item.serie}', '${item.status}')" style="background-color: #ffc107; color: black; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; margin-right: 5px;">Editar</button>
+            <button onclick="removerItem(${item.id})" style="background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Excluir</button>
         </td>
     `;
     tabelaCorpo.appendChild(tr);

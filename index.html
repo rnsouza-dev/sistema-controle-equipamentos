@@ -21,18 +21,18 @@
 
     <main>
         <section id="cadastro" style="display: none;">
-            <h2>Cadastrar Novo Colaboradores</h2>
+            <h2>Cadastrar Novo Colaborador</h2>
+                <form id="equipamento-form">
+                    <input type="text" id="nome" placeholder="Nome do Colaborador" required>
+                    <input type="text" id="usuario" placeholder="Usuário" required>
+                    <select id="turno">
+                        <option value="Diarista">Diarista</option>
+                        <option value="Plantonista Noturno">Plantonista Noturno</option>
+                        <option value="Plantonista Diurno">Plantonista Diurno</option>
+                    </select>
+                    <button type="submit">Adicionar</button>
+                </form>
         </section>
-            <form id="equipamento-form">
-                <input type="text" id="nome" placeholder="Nome do Colaborador" required>
-                <input type="text" id="usuario" placeholder="Usuário" required>
-                <select id="status">
-                    <option value="diarista">Diarista</option>
-                    <option value="platonistaN">platonista noturno</option>
-                    <option value="plantonistaD">plantonista diario</option>
-                </select>
-                <button type="submit">Adicionar</button>
-            </form>
 
         <hr>
         <div class="search-container" style="margin-bottom: 15px;">
