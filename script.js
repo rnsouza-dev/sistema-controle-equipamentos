@@ -128,8 +128,8 @@ async function removerItem(id) {
     }
 }
 
-// Seleciona o campo de busca (o retângulo onde você digita "ss")
-const inputBusca = document.querySelector('input[type="text"]:not([id])') || document.querySelector('input[placeholder*="Buscar"]');
+/// Substitui por esse arquivo, gemini me ajudo.
+const inputBusca = document.getElementById('inputBusca');
 
 if (inputBusca) {
     inputBusca.addEventListener('keyup', function() {
@@ -137,15 +137,16 @@ if (inputBusca) {
         const linhas = tabelaCorpo.getElementsByTagName('tr');
 
         Array.from(linhas).forEach(linha => {
-            // Pega o texto das colunas Nome (0) e Série (1)
-            const nome = linha.children[0].textContent.toLowerCase();
-            const serie = linha.children[1].textContent.toLowerCase();
+            // Verifica se a linha tem células antes de acessar
+            if (linha.cells.length > 0) {
+                const nome = linha.cells[0].textContent.toLowerCase();
+                const serie = linha.cells[1].textContent.toLowerCase();
 
-            // Se o termo estiver no nome ou na série, mostra a linha
-            if (nome.includes(termo) || serie.includes(termo)) {
-                linha.style.display = "";
-            } else {
-                linha.style.display = "none";
+                if (nome.includes(termo) || serie.includes(termo)) {
+                    linha.style.display = "";
+                } else {
+                    linha.style.display = "none";
+                }
             }
         });
     });
