@@ -4,12 +4,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle de Equipamentos</title>
+    <title>Controle de Colaboradores</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Gestão de Inventário de TI</h1>
+        <h1>Gestão de controle dos Colaboradores</h1>
         <div id="auth-controls" style="text-align: right; padding: 10px;">
             <button id="btn-login" onclick="fazerLogin()">Entrar (Admin)</button>
                 <div id="user-info" style="display: none;">
@@ -21,15 +21,15 @@
 
     <main>
         <section id="cadastro" style="display: none;">
-            <h2>Cadastrar Novo Equipamento</h2>
+            <h2>Cadastrar Novo Colaboradores</h2>
         </section>
             <form id="equipamento-form">
-                <input type="text" id="nome" placeholder="Nome do Equipamento (ex: Notebook)" required>
-                <input type="text" id="serie" placeholder="Nº de Série / Patrimônio" required>
+                <input type="text" id="nome" placeholder="Nome do Colaborador" required>
+                <input type="text" id="usuario" placeholder="Usuário" required>
                 <select id="status">
-                    <option value="disponivel">Disponível</option>
-                    <option value="uso">Em Uso</option>
-                    <option value="manutencao">Manutenção</option>
+                    <option value="diarista">Diarista</option>
+                    <option value="platonistaN">platonista noturno</option>
+                    <option value="plantonistaD">plantonista diario</option>
                 </select>
                 <button type="submit">Adicionar</button>
             </form>
@@ -40,13 +40,13 @@
            style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
         </div>
         <section id="lista">
-            <h2>Equipamentos Cadastrados</h2>
+            <h2>Colaboradores Cadastrados</h2>
             <table>
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>Série</th>
-                        <th>Status</th>
+                        <th>Usuário</th>
+                        <th>Turno</th>
                         <th>Ações</th>
                     </tr>
                 </thead>

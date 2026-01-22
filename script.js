@@ -52,46 +52,33 @@ async function carregarDados() {
     }
 }
 
-// MODIFICADO: Evento de Submit (serve para Criar e para Editar)
+// MODIFICADO: Evento de Submit para Colaboradores
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const dados = {
         nome: document.getElementById('nome').value,
-        serie: document.getElementById('serie').value,
-        status: document.getElementById('status').value
+        usuario: document.getElementById('usuario').value, // Antes era 'serie'
+        turno: document.getElementById('turno').value      // Antes era 'status'
     };
 
     if (idEdicao) {
-        // MODO EDIÇÃO: Tenta atualizar o item no banco
         const { error, status } = await _supabase
-            .from('equipamentos')
+            .from('equipamentos') // Mantendo o nome da tabela no banco por enquanto
             .update(dados)
             .eq('id', idEdicao);
 
-        // verificamos se houve erro 
-        // ou se o status retornado indica que nada foi alterado (comum em RLS)
-        if (error || status === 403 || status === 401) {
-            alert("Acesso Negado: Somente administradores logados podem editar equipamentos.");
-            console.error("Erro na atualização:", error);
+        if (error || status === 403) {
+            alert("Acesso Negado: Somente admins podem editar.");
         } else {
-            alert("Equipamento atualizado com sucesso!");
+            alert("Colaborador atualizado!");
             idEdicao = null;
-            const btn = form.querySelector('button');
-            btn.innerText = "Adicionar"; 
-            btn.style.backgroundColor = ""; 
-            btn.style.color = "";
+            form.querySelector('button').innerText = "Adicionar";
         }
-    }
-    else {
-        // MODO CRIAÇÃO: Insere um novo item
-        const { error } = await _supabase
-            .from('equipamentos')
-            .insert([dados]);
-
+    } else {
+        const { error } = await _supabase.from('equipamentos').insert([dados]);
         if (error) alert("Erro ao salvar: " + error.message);
     }
-
     carregarDados();
     form.reset();
 });
@@ -110,14 +97,13 @@ async function prepararEdicao(id, nome, serie, status) {
     form.scrollIntoView({ behavior: 'smooth' }); 
 }
 
+// MODIFICADO: Função que desenha a tabela
 function adicionarLinhaTabela(item) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
         <td>${item.nome}</td>
-        <td>${item.serie}</td>
-        <td><span class="status-tag ${item.status}">${item.status}</span></td>
-        <td>
-            <button onclick="prepararEdicao(${item.id}, '${item.nome}', '${item.serie}', '${item.status}')" style="background-color: #ffc107; color: black; border: none; padding: 5px; cursor: pointer; border-radius: 4px;">Editar</button>
+        <td>${item.usuario}</td> <td>${item.turno}</td>   <td>
+            <button onclick="prepararEdicao(${item.id}, '${item.nome}', '${item.usuario}', '${item.turno}')" style="background-color: #ffc107; color: black; border: none; padding: 5px; cursor: pointer; border-radius: 4px;">Editar</button>
             <button onclick="removerItem(${item.id})" class="btn-del">Excluir</button>
         </td>
     `;
