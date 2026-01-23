@@ -131,9 +131,9 @@ if (inputBusca) {
             // Verifica se a linha tem células antes de acessar
             if (linha.cells.length > 0) {
                 const nome = linha.cells[0].textContent.toLowerCase();
-                const serie = linha.cells[1].textContent.toLowerCase();
+                const usuario = linha.cells[1].textContent.toLowerCase();
 
-                if (nome.includes(termo) || serie.includes(termo)) {
+                if (nome.includes(termo) || usuario.includes(termo)) {
                     linha.style.display = "";
                 } else {
                     linha.style.display = "none";
