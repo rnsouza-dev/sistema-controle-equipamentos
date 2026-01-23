@@ -84,7 +84,7 @@ form.addEventListener('submit', async (e) => {
     form.reset();
 });
 
-// FUNÇÃO PREPARAR EDIÇÃO (Atualizada com Setor)
+// FUNÇÃO PREPARAR EDIÇÃO
 async function prepararEdicao(id, nome, usuario, setor, turno) {
     document.getElementById('nome').value = nome;
     document.getElementById('usuario').value = usuario;
@@ -96,7 +96,7 @@ async function prepararEdicao(id, nome, usuario, setor, turno) {
     form.scrollIntoView({ behavior: 'smooth' }); 
 }
 
-// FUNÇÃO ADICIONAR LINHA (Para mostrar o Setor na tabela)
+// FUNÇÃO ADICIONAR LINHA
 function adicionarLinhaTabela(item) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
