@@ -43,3 +43,14 @@ th {
     background-color: #007bff;
     color: white;
 }
+form {
+    display: flex;
+    flex-wrap: wrap; /* Permite que os campos pulem linha se não couberem */
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+input {
+    flex: 1; /* Faz os inputs ocuparem o espaço disponível igualmente */
+    min-width: 150px;
+}
