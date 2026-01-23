@@ -25,11 +25,12 @@
                 <form id="equipamento-form">
                     <input type="text" id="nome" placeholder="Nome do Colaborador" required>
                     <input type="text" id="usuario" placeholder="Usuário" required>
-                    <select id="turno">
-                        <option value="Diarista">Diarista</option>
-                        <option value="Plantonista Noturno">Plantonista Noturno</option>
-                        <option value="Plantonista Diurno">Plantonista Diurno</option>
-                    </select>
+                    <input type="text" id="setor" placeholder="Setor (ex: TI, Almoxarifado)" required>
+                        <select id="turno">
+                            <option value="Diarista">Diarista</option>
+                            <option value="Plantonista Noturno">Plantonista Noturno</option>
+                            <option value="Plantonista Diurno">Plantonista Diurno</option>
+                        </select>
                     <button type="submit">Adicionar</button>
                 </form>
         </section>
@@ -46,7 +47,7 @@
                     <tr>
                         <th>Nome</th>
                         <th>Usuário</th>
-                        <th>Turno</th>
+                        <th>Setor</th> <th>Turno</th>
                         <th>Ações</th>
                     </tr>
                 </thead>

@@ -52,15 +52,15 @@ async function carregarDados() {
     }
 }
 
-// EVENTO SUBMIT CORRIGIDO
+// EVENTO SUBMIT
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Mapeamos os campos novos para as colunas antigas do banco
     const dados = {
         nome: document.getElementById('nome').value,
-        serie: document.getElementById('usuario').value, // Envia 'usuario' para a coluna 'serie'
-        status: document.getElementById('turno').value   // Envia 'turno' para a coluna 'status'
+        usuario: document.getElementById('usuario').value,
+        setor: document.getElementById('setor').value, // Novo campo
+        turno: document.getElementById('turno').value
     };
 
     if (idEdicao) {
@@ -70,42 +70,41 @@ form.addEventListener('submit', async (e) => {
             .eq('id', idEdicao);
 
         if (error || status === 403) {
-            alert("Acesso Negado: Somente admins podem editar.");
+            alert("Acesso Negado: Somente administradores logados podem editar.");
         } else {
-            alert("Colaborador atualizado!");
+            alert("Colaborador atualizado com sucesso!");
             idEdicao = null;
             form.querySelector('button').innerText = "Adicionar";
-            form.querySelector('button').style.backgroundColor = "";
         }
     } else {
         const { error } = await _supabase.from('equipamentos').insert([dados]);
-        if (error) alert("Erro ao salvar: " + error.message);
+        if (error) alert("Erro ao salvar: Verifique se as colunas no Supabase foram renomeadas.");
     }
     carregarDados();
     form.reset();
 });
 
-// FUNÇÃO PREPARAR EDIÇÃO CORRIGIDA
-async function prepararEdicao(id, nome, usuario, turno) {
+// FUNÇÃO PREPARAR EDIÇÃO (Atualizada com Setor)
+async function prepararEdicao(id, nome, usuario, setor, turno) {
     document.getElementById('nome').value = nome;
     document.getElementById('usuario').value = usuario;
+    document.getElementById('setor').value = setor;
     document.getElementById('turno').value = turno;
 
     idEdicao = id; 
-    const btn = form.querySelector('button');
-    btn.innerText = "Salvar Alterações";
-    btn.style.backgroundColor = "#ffc107";
-    btn.style.color = "black";
+    form.querySelector('button').innerText = "Salvar Alterações";
     form.scrollIntoView({ behavior: 'smooth' }); 
 }
 
-// FUNÇÃO ADICIONAR LINHA CORRIGIDA
+// FUNÇÃO ADICIONAR LINHA (Para mostrar o Setor na tabela)
 function adicionarLinhaTabela(item) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
         <td>${item.nome}</td>
-        <td>${item.serie}</td> <td>${item.status}</td> <td>
-            <button onclick="prepararEdicao(${item.id}, '${item.nome}', '${item.serie}', '${item.status}')" style="background-color: #ffc107; color: black; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; margin-right: 5px;">Editar</button>
+        <td>${item.usuario}</td>
+        <td>${item.setor}</td> <td>${item.turno}</td>
+        <td>
+            <button onclick="prepararEdicao(${item.id}, '${item.nome}', '${item.usuario}', '${item.setor}', '${item.turno}')" style="background-color: #ffc107; color: black; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; margin-right: 5px;">Editar</button>
             <button onclick="removerItem(${item.id})" style="background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Excluir</button>
         </td>
     `;
