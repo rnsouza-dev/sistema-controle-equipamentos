@@ -1,23 +1,29 @@
-# 🛠️ Sistema de Controle de Equipamentos
+# 👥 Sistema de Gestão de Colaboradores (Full Stack)
 
-Sistema web para gestão e controle de inventário de TI, permitindo o cadastro, visualização e exclusão de equipamentos em tempo real.
+Este projeto é uma solução prática desenvolvida para otimizar o controle de colaboradores e escalas na operação da **Hosplog**. O sistema evoluiu de um controle de inventário para uma plataforma completa de gestão de pessoal.
 
-## 🚀 Tecnologias Utilizadas
+## 🚀 Funcionalidades
+- **Autenticação Segura:** Acesso administrativo restrito via Supabase Auth.
+- **Operações CRUD Completas:** Cadastro, visualização, edição e exclusão de colaboradores.
+- **Busca em Tempo Real:** Filtro dinâmico por nome ou usuário diretamente na interface.
+- **Segurança a Nível de Banco (RLS):** Proteção de dados garantida por Row Level Security no PostgreSQL.
+- **Gestão de Escalas:** Controle específico de turnos (Diarista, Plantonista Diurno/Noturno) e setores.
 
-Este projeto foi construído com as seguintes tecnologias:
+## 🛠️ Tecnologias Utilizadas
+- **Frontend:** HTML5, CSS3, JavaScript (ES6+ / Assíncrono)
+- **Backend:** [Supabase](https://supabase.com/) (Backend-as-a-Service)
+- **Banco de Dados:** PostgreSQL
+- **Hospedagem:** GitHub Pages
 
-- **Frontend:** HTML5, CSS3 e JavaScript (ES6+).
-- **Banco de Dados (BaaS):** [Supabase](https://supabase.com/) (PostgreSQL).
-- **Hospedagem:** GitHub Pages.
+## 🔒 Configuração de Segurança
+O projeto utiliza **Row Level Security (RLS)** para garantir que apenas usuários autenticados possam realizar alterações críticas. As permissões de leitura são públicas, enquanto as de escrita (Insert/Update/Delete) são restritas a administradores cadastrados no sistema.
 
-## ✨ Funcionalidades
+## 📂 Estrutura do Banco de Dados
+A tabela `equipamentos` (mantida para compatibilidade) foi reestruturada com as seguintes colunas:
+- `nome`: Nome completo do colaborador.
+- `usuario`: Identificador de login/sistema.
+- `setor`: Área de atuação (ex: TI, Logística).
+- `turno`: Horário de trabalho.
 
-- **Integração em Nuvem:** Os dados são persistidos em um banco de dados SQL remoto, permitindo acesso de múltiplos dispositivos.
-- **Operações CRUD:** Criação, Leitura e Exclusão de itens diretamente pela interface.
-- **Design Responsivo:** Interface simples e funcional para uso operacional.
-
-## 📥 Como executar o projeto
-
-1. Clone o repositório:
-   ```bash
-   git clone [https://github.com/rnsouza-dev/sistema-controle-equipamentos.git](https://github.com/rnsouza-dev/sistema-controle-equipamentos.git)
+## 👨‍💻 Autor
+Desenvolvido por **Renan Souza** durante o curso de **ADS (Análise e Desenvolvimento de Sistemas)**.
