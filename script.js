@@ -42,6 +42,20 @@ function configurarInterface(session) {
     }
 }
 
+async function registrarLog(acao, colaboradorNome) {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) return;
+
+    const novoLog = {
+        usuario_admin: session.user.email,
+        acao: acao,
+        colaborador_afetado: colaboradorNome
+    };
+
+    const { error } = await _supabase.from('logs').insert([novoLog]);
+    if (error) console.error("Erro ao gravar log:", error);
+}
+
 // FUNÇÕES DO BANCO DE DADOS
 async function carregarDados() {
     const { data, error } = await _supabase.from('equipamentos').select('*').order('created_at', { ascending: false });
@@ -56,30 +70,42 @@ async function carregarDados() {
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+
     const dados = {
         nome: document.getElementById('nome').value,
         usuario: document.getElementById('usuario').value,
-        setor: document.getElementById('setor').value, // Novo campo
+        setor: document.getElementById('setor').value,
         turno: document.getElementById('turno').value
     };
 
     if (idEdicao) {
+        // --- MODO EDIÇÃO ---
         const { error, status } = await _supabase
             .from('equipamentos')
             .update(dados)
             .eq('id', idEdicao);
 
         if (error || status === 403) {
-            alert("Acesso Negado: Somente administradores logados podem editar.");
+            alert("Acesso Negado: Somente administradores podem editar.");
         } else {
+            await registrarLog("EDIÇÃO", dados.nome); // Grava o Log de Edição
             alert("Colaborador atualizado com sucesso!");
             idEdicao = null;
             form.querySelector('button').innerText = "Adicionar";
         }
     } else {
+        // --- MODO CRIAÇÃO ---
         const { error } = await _supabase.from('equipamentos').insert([dados]);
-        if (error) alert("Erro ao salvar: Verifique se as colunas no Supabase foram renomeadas.");
+        
+        if (error) {
+            console.error(error);
+            alert("Erro ao salvar: Verifique se as colunas no Supabase estão corretas.");
+        } else {
+            await registrarLog("CADASTRO", dados.nome); // Grava o Log de Cadastro
+            alert("Colaborador cadastrado com sucesso!");
+        }
     }
+
     carregarDados();
     form.reset();
 });
@@ -114,8 +140,11 @@ function adicionarLinhaTabela(item) {
 async function removerItem(id) {
     if (confirm("Deseja excluir este item?")) {
         const { error } = await _supabase.from('equipamentos').delete().eq('id', id);
-        if (error) alert("Erro: Apenas administradores logados podem excluir.");
-        else carregarDados();
+        if 
+            (error) alert("Erro: Apenas administradores logados podem excluir.");
+        else
+            registrarLog("EXCLUSÃO", "ID: " + id);    
+            carregarDados();
     }
 }
 
