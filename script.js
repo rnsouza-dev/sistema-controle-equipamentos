@@ -8,6 +8,7 @@ const tabelaCorpo = document.getElementById('tabela-corpo');
 
 // Inicia verificando se já existe alguém logado
 document.addEventListener('DOMContentLoaded', async () => {
+    atualizarGrafico()
     const { data: { session } } = await _supabase.auth.getSession();
     configurarInterface(session);
     carregarDados();
@@ -69,6 +70,7 @@ async function carregarDados() {
 // EVENTO SUBMIT
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    atualizarGrafico()
 
 
     const dados = {
@@ -139,6 +141,7 @@ function adicionarLinhaTabela(item) {
 
 async function removerItem(id) {
     if (confirm("Deseja excluir este item?")) {
+        atualizarGrafico()
         const { error } = await _supabase.from('equipamentos').delete().eq('id', id);
         if 
             (error) alert("Erro: Apenas administradores logados podem excluir.");
@@ -169,5 +172,49 @@ if (inputBusca) {
                 }
             }
         });
+    });
+}
+
+let meuGrafico = null; // Guarda a instância do gráfico para podermos atualizar
+
+async function atualizarGrafico() {
+    const { data, error } = await _supabase.from('equipamentos').select('turno');
+    
+    if (error) return console.error("Erro ao carregar dados do gráfico:", error);
+
+    // Contagem de colaboradores por turno
+    const contagem = {
+        'Diarista': 0,
+        'Plantonista Noturno': 0,
+        'Plantonista Diurno': 0
+    };
+
+    data.forEach(item => {
+        if (contagem[item.turno] !== undefined) {
+            contagem[item.turno]++;
+        }
+    });
+
+    const ctx = document.getElementById('graficoTurnos').getContext('2d');
+
+    // Se o gráfico já existe, destruímos para criar um novo com dados atualizados
+    if (meuGrafico) meuGrafico.destroy();
+
+    meuGrafico = new Chart(ctx, {
+        type: 'pie', // Gráfico de pizza
+        data: {
+            labels: Object.keys(contagem),
+            datasets: [{
+                data: Object.values(contagem),
+                backgroundColor: ['#007bff', '#333333', '#28a745'], // Cores para cada turno
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
     });
 }

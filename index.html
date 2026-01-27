@@ -40,6 +40,15 @@
             <input type="text" id="inputBusca" placeholder="🔍 Buscar por nome ou série..." 
            style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
         </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <section id="dashboard" style="margin: 20px 0; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h2>Distribuição por Turno</h2>
+            <div style="max-width: 400px; margin: 0 auto;">
+                <canvas id="graficoTurnos"></canvas>
+            </div>
+        </section>
         <section id="lista">
             <h2>Colaboradores Cadastrados</h2>
             <table>
