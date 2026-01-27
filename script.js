@@ -141,13 +141,13 @@ function adicionarLinhaTabela(item) {
 
 async function removerItem(id) {
     if (confirm("Deseja excluir este item?")) {
-        atualizarGrafico()
         const { error } = await _supabase.from('equipamentos').delete().eq('id', id);
         if 
             (error) alert("Erro: Apenas administradores logados podem excluir.");
         else
             registrarLog("EXCLUSÃO", "ID: " + id);    
             carregarDados();
+            atualizarGrafico()
     }
 }
 
