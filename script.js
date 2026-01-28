@@ -38,8 +38,10 @@ function configurarInterface(session) {
     if (session) {
         btnLogin.style.display = 'none';
         userInfo.style.display = 'block';
-        cadastroSection.style.display = 'block';
+        cadastroSection.style.setProperty('display', 'block', 'important'); // Força a exibição
         document.getElementById('user-email').innerText = session.user.email;
+    } else {
+        cadastroSection.style.display = 'none';
     }
 }
 

@@ -23,21 +23,21 @@
     <main>
         <section id="cadastro" style="display: none;">
             <h2>Cadastrar Novo Colaborador</h2>
-                <form id="equipamento-form">
-                    <input type="text" id="nome" placeholder="Nome do Colaborador" required>
-                    <input type="text" id="usuario" placeholder="Usuário" required>
-                    <input type="text" id="setor" placeholder="Setor (ex: TI, Almoxarifado)" required>
-                        <select id="turno">
-                            <option value="Diarista">Diarista</option>
-                            <option value="Plantonista Noturno">Plantonista Noturno</option>
-                            <option value="Plantonista Diurno">Plantonista Diurno</option>
-                        </select>
-                    <button type="submit">Adicionar</button>
-                </form>
+            <form id="equipamento-form">
+                <input type="text" id="nome" placeholder="Nome do Colaborador" required>
+                <input type="text" id="usuario" placeholder="Usuário" required>
+                <input type="text" id="setor" placeholder="Setor (ex: TI, Almoxarifado)" required>
+                    <select id="turno">
+                        <option value="Diarista">Diarista</option>
+                        <option value="Plantonista Noturno">Plantonista Noturno</option>
+                        <option value="Plantonista Diurno">Plantonista Diurno</option>
+                    </select>
+                <button type="submit">Adicionar</button>
+            </form>
             <div id="importacao-container" style="margin-top: 20px; padding: 15px; border: 1px dashed #28a745; border-radius: 5px;">
                 <h3>📥 Importar Colaboradores (Excel)</h3>
-                    <p style="font-size: 0.9em; color: #666;">Selecione um arquivo .xlsx com as colunas: <b>Nome, Usuário, Setor, Turno</b></p>
-                <input type="file" id="inputImportar" accept=".xlsx, .xls" style="margin-top: 10px;" style="display: block !important;">
+                <p style="font-size: 0.9em; color: #666;">Selecione um arquivo .xlsx com as colunas: <b>Nome, Usuário, Setor, Turno</b></p>
+                <input type="file" id="inputImportar" accept=".xlsx, .xls" style="margin-top: 10px; display: block;">
             </div>
         </section>
 
