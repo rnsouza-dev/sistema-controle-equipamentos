@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,9 +37,9 @@
         </section>
 
         <hr>
-        <div style="margin-bottom: 15px; display: flex; gap: 10px;">
-            <button id="btnExportar" onclick="exportarParaCSV()" style="background-color: #217346;">📥 Exportar para Excel (CSV)</button>
-        </div>
+        <button id="btnExportar" onclick="exportarParaExcel()" style="background-color: #1D6F42;">
+            📊Exportar para Excel (.xlsx)
+        </button>
         <div class="search-container" style="margin-bottom: 15px;">
             <input type="text" id="inputBusca" placeholder="🔍 Buscar por nome ou série..." 
            style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;">

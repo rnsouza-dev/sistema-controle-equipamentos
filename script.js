@@ -219,10 +219,11 @@ async function atualizarGrafico() {
     });
 }
 
-function exportarParaCSV() {
-    let csvContent = "\uFEFF"; // Garante acentuação no Excel
-    const cabecalho = ["Nome", "Usuario", "Setor", "Turno"];
-    csvContent += cabecalho.join(";") + "\n";
+function exportarParaExcel() {
+    // 1. Capturar os dados da tabela
+    const dados = [];
+    const cabecalho = ["Nome", "Usuário", "Setor", "Turno"];
+    dados.push(cabecalho);
 
     const linhas = tabelaCorpo.querySelectorAll("tr");
     
@@ -232,29 +233,31 @@ function exportarParaCSV() {
     }
 
     linhas.forEach(linha => {
-        if (linha.style.display !== "none") { // Exporta só o que não está filtrado
+        if (linha.style.display !== "none") { // Exporta apenas o que está visível
             const colunas = linha.querySelectorAll("td");
             if (colunas.length >= 4) {
-                const dadosLinha = [
+                dados.push([
                     colunas[0].innerText.trim(),
                     colunas[1].innerText.trim(),
                     colunas[2].innerText.trim(),
                     colunas[3].innerText.trim()
-                ];
-                csvContent += dadosLinha.join(";") + "\n";
+                ]);
             }
         }
     });
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'relatorio_colaboradores_hosplog.csv';
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
+    // 2. Criar a estrutura do arquivo Excel usando a biblioteca SheetJS
+    const wb = XLSX.utils.book_new(); // Cria um novo livro
+    const ws = XLSX.utils.aoa_to_sheet(dados); // Converte o array para uma planilha
+
+    // Ajustar largura das colunas automaticamente
+    ws['!cols'] = [{ wch: 30 }, { wch: 20 }, { wch: 20 }, { wch: 20 }];
+
+    XLSX.utils.book_append_sheet(wb, ws, "Colaboradores"); // Adiciona a aba
+
+    // 3. Gerar o download do arquivo .xlsx
+    XLSX.writeFile(wb, "relatorio_colaboradores_hosplog.xlsx");
     
-    registrarLog("EXPORTAÇÃO", "Relatório CSV baixado");
+    // 4. Registrar no seu sistema de auditoria
+    registrarLog("EXPORTAÇÃO EXCEL", "Relatório .xlsx baixado");
 }
