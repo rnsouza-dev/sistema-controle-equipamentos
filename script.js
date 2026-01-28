@@ -218,3 +218,38 @@ async function atualizarGrafico() {
         }
     });
 }
+
+function exportarParaCSV() {
+    const linhas = [];
+    const cabecalho = ["Nome", "Usuario", "Setor", "Turno"];
+    linhas.push(cabecalho.join(";")); // Usamos ";" para o Excel brasileiro reconhecer as colunas
+
+    const dadosTabela = tabelaCorpo.querySelectorAll("tr");
+
+    dadosTabela.forEach(linha => {
+        const colunas = linha.querySelectorAll("td");
+        if (colunas.length > 0) {
+            const linhaTexto = [
+                colunas[0].innerText,
+                colunas[1].innerText,
+                colunas[2].innerText,
+                colunas[3].innerText
+            ].join(";");
+            linhas.push(linhaTexto);
+        }
+    });
+
+    const csvContent = "\uFEFF" + linhas.join("\n"); // O prefixo \uFEFF ajuda o Excel com acentos
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "relatorio_colaboradores.csv");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    registrarLog("EXPORTAÇÃO", "Relatório CSV baixado");
+}
