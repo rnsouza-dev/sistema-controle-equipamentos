@@ -8,10 +8,10 @@ const tabelaCorpo = document.getElementById('tabela-corpo');
 
 // Inicia verificando se já existe alguém logado
 document.addEventListener('DOMContentLoaded', async () => {
-    atualizarGrafico()
     const { data: { session } } = await _supabase.auth.getSession();
     configurarInterface(session);
     carregarDados();
+    atualizarGrafico()
 });
 
 // FUNÇÕES DE AUTENTICAÇÃO
@@ -142,12 +142,13 @@ function adicionarLinhaTabela(item) {
 async function removerItem(id) {
     if (confirm("Deseja excluir este item?")) {
         const { error } = await _supabase.from('equipamentos').delete().eq('id', id);
-        if 
-            (error) alert("Erro: Apenas administradores logados podem excluir.");
-        else
-            registrarLog("EXCLUSÃO", "ID: " + id);    
-            carregarDados();
-            atualizarGrafico()
+        if (error) {
+            alert("Erro: Apenas administradores logados podem excluir.");
+        } else {
+            await registrarLog("EXCLUSÃO", "ID: " + id);    
+            await carregarDados();
+            await atualizarGrafico();
+        }
     }
 }
 
