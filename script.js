@@ -313,3 +313,28 @@ async function processarImportacao(lista) {
         document.getElementById('inputImportar').value = ""; // Limpa o campo
     }
 }
+
+function baixarPlanilhaModelo() {
+    // 1. Definir o cabeçalho esperado pelo seu código de importação
+    const cabecalho = [["Nome", "Usuário", "Setor", "Turno"]];
+    
+    // 2. Criar o livro e a planilha
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(cabecalho);
+
+    // 3. Adicionar exemplos para orientar o usuário
+    const exemplos = [
+        ["Exemplo Silva", "exemplo.silva", "Logística", "Diarista"],
+        ["João Admin", "joao.admin", "TI", "Plantonista Noturno"]
+    ];
+    XLSX.utils.sheet_add_aoa(ws, exemplos, { origin: "A2" });
+
+    // Configurar larguras das colunas
+    ws['!cols'] = [{ wch: 25 }, { wch: 20 }, { wch: 20 }, { wch: 20 }];
+
+    // 4. Gerar o arquivo
+    XLSX.utils.book_append_sheet(wb, ws, "Modelo_Importacao");
+    XLSX.writeFile(wb, "modelo_colaboradores_hosplog.xlsx");
+
+    registrarLog("DOWNLOAD_MODELO", "Planilha padrão baixada"); //
+}
