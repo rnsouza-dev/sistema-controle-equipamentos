@@ -220,36 +220,41 @@ async function atualizarGrafico() {
 }
 
 function exportarParaCSV() {
-    const linhas = [];
+    let csvContent = "\uFEFF"; // Garante acentuação no Excel
     const cabecalho = ["Nome", "Usuario", "Setor", "Turno"];
-    linhas.push(cabecalho.join(";")); // Usamos ";" para o Excel brasileiro reconhecer as colunas
+    csvContent += cabecalho.join(";") + "\n";
 
-    const dadosTabela = tabelaCorpo.querySelectorAll("tr");
+    const linhas = tabelaCorpo.querySelectorAll("tr");
+    
+    if (linhas.length === 0) {
+        alert("Não há dados para exportar.");
+        return;
+    }
 
-    dadosTabela.forEach(linha => {
-        const colunas = linha.querySelectorAll("td");
-        if (colunas.length > 0) {
-            const linhaTexto = [
-                colunas[0].innerText,
-                colunas[1].innerText,
-                colunas[2].innerText,
-                colunas[3].innerText
-            ].join(";");
-            linhas.push(linhaTexto);
+    linhas.forEach(linha => {
+        if (linha.style.display !== "none") { // Exporta só o que não está filtrado
+            const colunas = linha.querySelectorAll("td");
+            if (colunas.length >= 4) {
+                const dadosLinha = [
+                    colunas[0].innerText.trim(),
+                    colunas[1].innerText.trim(),
+                    colunas[2].innerText.trim(),
+                    colunas[3].innerText.trim()
+                ];
+                csvContent += dadosLinha.join(";") + "\n";
+            }
         }
     });
 
-    const csvContent = "\uFEFF" + linhas.join("\n"); // O prefixo \uFEFF ajuda o Excel com acentos
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", "relatorio_colaboradores.csv");
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'relatorio_colaboradores_hosplog.csv';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
     
     registrarLog("EXPORTAÇÃO", "Relatório CSV baixado");
 }
