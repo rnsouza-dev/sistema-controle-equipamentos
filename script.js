@@ -262,3 +262,52 @@ function exportarParaExcel() {
     // 4. Registrar no seu sistema de auditoria
     registrarLog("EXPORTAÇÃO EXCEL", "Relatório .xlsx baixado");
 }
+
+// Listener para o input de arquivo
+document.getElementById('inputImportar').addEventListener('change', function(e) {
+    const arquivo = e.target.files[0];
+    if (!arquivo) return;
+
+    const leitor = new FileReader();
+
+    leitor.onload = async function(e) {
+        const dadosPlanilha = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(dadosPlanilha, { type: 'array' });
+
+        // Pega a primeira aba da planilha
+        const nomeAba = workbook.SheetNames[0];
+        const aba = workbook.Sheets[nomeAba];
+
+        // Converte para JSON (cada linha vira um objeto)
+        const listaParaImportar = XLSX.utils.sheet_to_json(aba);
+
+        if (confirm(`Deseja importar ${listaParaImportar.length} colaboradores?`)) {
+            await processarImportacao(listaParaImportar);
+        }
+    };
+
+    leitor.readAsArrayBuffer(arquivo);
+});
+
+async function processarImportacao(lista) {
+    // Mapeia os dados da planilha para as colunas do seu banco
+    const dadosFormatados = lista.map(item => ({
+        nome: item.Nome || item.nome,
+        usuario: item.Usuário || item.Usuario || item.usuario,
+        setor: item.Setor || item.setor,
+        turno: item.Turno || item.turno
+    }));
+
+    const { error } = await _supabase.from('equipamentos').insert(dadosFormatados);
+
+    if (error) {
+        console.error("Erro na importação:", error);
+        alert("Erro ao importar dados. Verifique o formato das colunas.");
+    } else {
+        await registrarLog("IMPORTAÇÃO EM MASSA", `${dadosFormatados.length} colaboradores importados`);
+        alert("Importação concluída com sucesso!");
+        carregarDados();
+        atualizarGrafico();
+        document.getElementById('inputImportar').value = ""; // Limpa o campo
+    }
+}
