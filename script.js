@@ -43,15 +43,21 @@ async function fazerLogout() {
 function configurarInterface(session) {
     const btnLogin = document.getElementById('btn-login');
     const userInfo = document.getElementById('user-info');
+    const userEmail = document.getElementById('user-email');
     const cadastroSection = document.getElementById('cadastro');
+    const thAcoes = document.getElementById('th-acoes'); // Nova referência
 
     if (session) {
         btnLogin.style.display = 'none';
         userInfo.style.display = 'block';
-        cadastroSection.style.setProperty('display', 'block', 'important'); // Força a exibição
-        document.getElementById('user-email').innerText = session.user.email;
+        userEmail.innerText = session.user.email;
+        cadastroSection.style.setProperty('display', 'block', 'important');
+        if (thAcoes) thAcoes.style.display = ''; // Mostra o cabeçalho "Ações"
     } else {
-        cadastroSection.style.display = 'none';
+        btnLogin.style.display = 'block';
+        userInfo.style.display = 'none';
+        cadastroSection.style.setProperty('display', 'none', 'important');
+        if (thAcoes) thAcoes.style.display = 'none'; // Esconde o cabeçalho "Ações"
     }
 }
 
@@ -71,12 +77,36 @@ async function registrarLog(acao, colaboradorNome) {
 
 // FUNÇÕES DO BANCO DE DADOS
 async function carregarDados() {
-    const { data, error } = await _supabase.from('equipamentos').select('*').order('created_at', { ascending: false });
-    if (error) console.error(error);
-    else {
-        tabelaCorpo.innerHTML = '';
-        data.forEach(item => adicionarLinhaTabela(item));
-    }
+    const { data: { session } } = await _supabase.auth.getSession(); // Verifica login
+    const { data, error } = await _supabase.from('equipamentos').select('*');
+
+    if (error) return console.error(error);
+
+    tabelaCorpo.innerHTML = "";
+    data.forEach(item => {
+        const linha = document.createElement('tr');
+        
+        // Colunas de dados comuns
+        let html = `
+            <td>${item.nome}</td>
+            <td>${item.usuario}</td>
+            <td>${item.setor}</td>
+            <td>${item.turno}</td>
+        `;
+
+        // Só adiciona a coluna de ações se o usuário for ADMIN (estiver logado)
+        if (session) {
+            html += `
+                <td>
+                    <button class="btn-edit" onclick="editarItem('${item.id}', '${item.nome}', '${item.usuario}', '${item.setor}', '${item.turno}')">✏️</button>
+                    <button class="btn-delete" onclick="removerItem('${item.id}')">🗑️</button>
+                </td>
+            `;
+        }
+
+        linha.innerHTML = html;
+        tabelaCorpo.appendChild(linha);
+    });
 }
 
 // EVENTO SUBMIT
