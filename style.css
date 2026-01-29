@@ -1,56 +1,142 @@
+:root {
+    --primary-color: #0056b3; /* Azul Hosplog */
+    --secondary-color: #28a745; /* Verde Sucesso */
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #333;
+    --border-radius: 8px;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 40px;
-    background-color: #f4f4f9;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
 }
 
 header {
-    text-align: center;
-    color: #333;
-}
-
-form {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    justify-content: space-between;
+    align-items: center;
 }
 
-input, select, button {
-    padding: 10px;
-    border: 1px solid #ccc;
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Estilização dos Cards e Seções */
+section {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 25px;
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    border-bottom: 2px solid var(--bg-color);
+    padding-bottom: 10px;
+    color: var(--primary-color);
+}
+
+/* Formulário Moderno */
+form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    align-items: end;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+input, select {
+    padding: 12px;
+    border: 1px solid #ddd;
     border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s;
 }
 
+input:focus, select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0,86,179,0.1);
+}
+
+/* Botões */
 button {
-    background-color: #28a745;
-    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
     cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+button:active { transform: scale(0.98); }
+button:hover { opacity: 0.9; }
+
+.btn-add { background-color: var(--secondary-color); color: white; }
+.btn-export { background-color: #1d6f42; color: white; }
+.btn-login { background-color: var(--primary-color); color: white; }
+
+/* Tabela Profissional */
+.table-container {
+    overflow-x: auto;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
-}
-
-th, td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: left;
+    margin-top: 10px;
 }
 
 th {
-    background-color: #007bff;
-    color: white;
-}
-form {
-    display: flex;
-    flex-wrap: wrap; /* Permite que os campos pulem linha se não couberem */
-    gap: 10px;
-    margin-bottom: 20px;
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    text-align: left;
+    padding: 15px;
+    font-weight: 600;
+    border-bottom: 2px solid #eee;
 }
 
-input {
-    flex: 1; /* Faz os inputs ocuparem o espaço disponível igualmente */
-    min-width: 150px;
+td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+}
+
+tr:hover { background-color: #fcfcfc; }
+
+/* Dashboard */
+#dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

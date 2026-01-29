@@ -32,7 +32,7 @@
                         <option value="Plantonista Noturno">Plantonista Noturno</option>
                         <option value="Plantonista Diurno">Plantonista Diurno</option>
                     </select>
-                <button type="submit">Adicionar</button>
+                <button type="submit" class="btn-add">➕ Adicionar</button>
             </form>
             <div id="importacao-container" style="margin-top: 20px; padding: 15px; border: 1px dashed #28a745; border-radius: 5px;">
                 <h3>📥 Importar Colaboradores (Excel)</h3>
@@ -64,19 +64,22 @@
             </div>
         </section>
         <section id="lista">
-            <h2>Colaboradores Cadastrados</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Usuário</th>
-                        <th>Setor</th> <th>Turno</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tabela-corpo">
-                    </tbody>
-            </table>
+    <h2>Colaboradores Cadastrados</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Usuário</th>
+                            <th>Setor</th>
+                            <th>Turno</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-corpo">
+                        </tbody>
+                </table>
+            </div>
         </section>
     </main>
 
