@@ -19,10 +19,20 @@ async function fazerLogin() {
     const email = prompt("E-mail do Administrador:");
     const password = prompt("Senha:");
     
+    // Mostra um aviso de "carregando" para o usuário
+    console.log("Tentando autenticar...");
+    
     const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
     
-    if (error) alert("Acesso negado: " + error.message);
-    else location.reload();
+    if (error) {
+        alert("Acesso negado: " + error.message);
+    } else {
+        alert("Login realizado com sucesso!");
+        // Em vez de reload imediato, chamamos a configuração manualmente
+        configurarInterface(data.session);
+        carregarDados();
+        atualizarDashboard();
+    }
 }
 
 async function fazerLogout() {
@@ -291,7 +301,7 @@ async function processarImportacao(lista) {
         await registrarLog("IMPORTAÇÃO EM MASSA", `${dadosFormatados.length} colaboradores importados`);
         alert("Importação concluída com sucesso!");
         carregarDados();
-        atualizarGrafico();
+        atualizarDashboard();
         document.getElementById('inputImportar').value = ""; // Limpa o campo
     }
 }
