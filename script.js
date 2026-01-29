@@ -16,21 +16,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     atualizarDashboard()
 });
 
-// FUNÇÕES DE AUTENTICAÇÃO
 async function fazerLogin() {
     const email = prompt("E-mail do Administrador:");
     const password = prompt("Senha:");
     
-    // Mostra um aviso de "carregando" para o usuário
-    console.log("Tentando autenticar...");
-    
     const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
     
     if (error) {
-        alert("Acesso negado: " + error.message);
+        mostrarToast("Acesso negado: " + error.message, "error"); // Substituído
     } else {
-        alert("Login realizado com sucesso!");
-        // Em vez de reload imediato, chamamos a configuração manualmente
+        mostrarToast("Bem-vindo, Administrador!", "success"); // Substituído
         configurarInterface(data.session);
         carregarDados();
         atualizarDashboard();
@@ -114,11 +109,8 @@ async function carregarDados() {
     });
 }
 
-// EVENTO SUBMIT
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    atualizarDashboard()
-
 
     const dados = {
         nome: document.getElementById('nome').value,
@@ -128,35 +120,30 @@ form.addEventListener('submit', async (e) => {
     };
 
     if (idEdicao) {
-        // --- MODO EDIÇÃO ---
-        const { error, status } = await _supabase
-            .from('equipamentos')
-            .update(dados)
-            .eq('id', idEdicao);
+        const { error, status } = await _supabase.from('equipamentos').update(dados).eq('id', idEdicao);
 
         if (error || status === 403) {
-            alert("Acesso Negado: Somente administradores podem editar.");
+            mostrarToast("Erro: Sem permissão para editar.", "error"); // Substituído
         } else {
-            await registrarLog("EDIÇÃO", dados.nome); // Grava o Log de Edição
-            alert("Colaborador atualizado com sucesso!");
+            await registrarLog("EDIÇÃO", dados.nome);
+            mostrarToast("Colaborador atualizado com sucesso!"); // Substituído
             idEdicao = null;
             form.querySelector('button').innerText = "Adicionar";
         }
     } else {
-        // --- MODO CRIAÇÃO ---
         const { error } = await _supabase.from('equipamentos').insert([dados]);
         
         if (error) {
-            console.error(error);
-            alert("Erro ao salvar: Verifique se as colunas no Supabase estão corretas.");
+            mostrarToast("Erro ao salvar no banco de dados.", "error"); // Substituído
         } else {
-            await registrarLog("CADASTRO", dados.nome); // Grava o Log de Cadastro
-            alert("Colaborador cadastrado com sucesso!");
+            await registrarLog("CADASTRO", dados.nome);
+            mostrarToast("Novo colaborador cadastrado!"); // Substituído
         }
     }
 
     carregarDados();
     form.reset();
+    atualizarDashboard();
 });
 
 // FUNÇÃO PREPARAR EDIÇÃO
@@ -175,9 +162,10 @@ async function removerItem(id) {
     if (confirm("Deseja excluir este item?")) {
         const { error } = await _supabase.from('equipamentos').delete().eq('id', id);
         if (error) {
-            alert("Erro: Apenas administradores logados podem excluir.");
+            mostrarToast("Erro: Apenas administradores podem excluir.", "error"); // Substituído
         } else {
             await registrarLog("EXCLUSÃO", "ID: " + id);    
+            mostrarToast("Colaborador removido da base.", "success"); // Substituído
             await carregarDados();
             await atualizarDashboard();
         }
@@ -243,7 +231,7 @@ function exportarParaExcel() {
     const linhas = tabelaCorpo.querySelectorAll("tr");
     
     if (linhas.length === 0) {
-        alert("Não há dados para exportar.");
+        mostrarToast("Não há dados para exportar.", "error"); // Substituído
         return;
     }
 
@@ -270,12 +258,11 @@ function exportarParaExcel() {
 
     XLSX.utils.book_append_sheet(wb, ws, "Colaboradores"); // Adiciona a aba
 
-    // 3. Gerar o download do arquivo .xlsx
-    XLSX.writeFile(wb, "relatorio_colaboradores_hosplog.xlsx");
-    
-    // 4. Registrar no seu sistema de auditoria
-    registrarLog("EXPORTAÇÃO EXCEL", "Relatório .xlsx baixado");
+    XLSX.writeFile(wb, "relatorio_hosplog.xlsx");
+    mostrarToast("Relatório Excel gerado!"); // Adicionado feedback
+    registrarLog("EXPORTAÇÃO EXCEL", "Relatório baixado");
 }
+
 
 // Listener para o input de arquivo
 document.getElementById('inputImportar').addEventListener('change', function(e) {
@@ -304,25 +291,17 @@ document.getElementById('inputImportar').addEventListener('change', function(e) 
 });
 
 async function processarImportacao(lista) {
-    // Mapeia os dados da planilha para as colunas do seu banco
-    const dadosFormatados = lista.map(item => ({
-        nome: item.Nome || item.nome,
-        usuario: item.Usuário || item.Usuario || item.usuario,
-        setor: item.Setor || item.setor,
-        turno: item.Turno || item.turno
-    }));
-
+    // ... mapeamento de dados ...
     const { error } = await _supabase.from('equipamentos').insert(dadosFormatados);
 
     if (error) {
-        console.error("Erro na importação:", error);
-        alert("Erro ao importar dados. Verifique o formato das colunas.");
+        mostrarToast("Falha na importação. Verifique o arquivo.", "error"); // Substituído
     } else {
-        await registrarLog("IMPORTAÇÃO EM MASSA", `${dadosFormatados.length} colaboradores importados`);
-        alert("Importação concluída com sucesso!");
+        await registrarLog("IMPORTAÇÃO EM MASSA", `${dadosFormatados.length} registros`);
+        mostrarToast(`${dadosFormatados.length} colaboradores importados com sucesso!`); // Substituído
         carregarDados();
         atualizarDashboard();
-        document.getElementById('inputImportar').value = ""; // Limpa o campo
+        document.getElementById('inputImportar').value = ""; 
     }
 }
 
@@ -377,4 +356,20 @@ async function ordenarTabela(coluna) {
 
     // Redesenha a tabela com os dados ordenados
     renderizarTabelaOrdenada(data, session);
+}
+
+function mostrarToast(mensagem, tipo = 'success') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    
+    toast.className = `toast toast-${tipo}`;
+    toast.innerHTML = `<span>${mensagem}</span>`;
+
+    container.appendChild(toast);
+
+    // Remove o toast após 3 segundos
+    setTimeout(() => {
+        toast.classList.add('toast-fade-out');
+        setTimeout(() => toast.remove(), 500);
+    }, 3000);
 }

@@ -180,3 +180,41 @@ th[onclick]:hover {
     background-color: #334155 !important; /* Cor levemente mais clara no tema escuro */
     color: var(--accent-blue);
 }
+
+/* Estilo base do Toast */
+.toast {
+    min-width: 250px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: var(--radius);
+    color: white;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease-out; /* Animação de entrada */
+}
+
+/* Tipos de Toast */
+.toast-success { 
+    background-color: #064e3b; 
+    border-left: 5px solid var(--success); 
+}
+
+.toast-error { 
+    background-color: #450a0a; 
+    border-left: 5px solid var(--danger); 
+}
+
+/* Animação */
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.toast-fade-out {
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s ease-out;
+}
