@@ -1,3 +1,5 @@
+let ordemDirecao = 1; // 1 para ascendente, -1 para descendente
+let colunaAtual = null;
 let idEdicao = null; // Guarda o ID do item que está a ser editado
 const SUPABASE_URL = 'https://pszgonbaqlhtzlcxspvd.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzemdvbmJhcWxodHpsY3hzcHZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMDgzODcsImV4cCI6MjA4NDU4NDM4N30.7dlyd31-6y4_HyaLVFCajjqBQQFOQI47_o26buPWFaI'; 
@@ -322,4 +324,57 @@ async function processarImportacao(lista) {
         atualizarDashboard();
         document.getElementById('inputImportar').value = ""; // Limpa o campo
     }
+}
+
+// Função auxiliar para desenhar a tabela sem buscar no banco novamente
+function renderizarTabelaOrdenada(dados, session) {
+    tabelaCorpo.innerHTML = "";
+    dados.forEach(item => {
+        const linha = document.createElement('tr');
+        let html = `
+            <td>${item.nome}</td>
+            <td>${item.usuario}</td>
+            <td>${item.setor}</td>
+            <td>${item.turno}</td>
+        `;
+
+        if (session) {
+            html += `
+                <td>
+                    <button class="btn-edit" onclick="prepararEdicao('${item.id}', '${item.nome}', '${item.usuario}', '${item.setor}', '${item.turno}')">✏️</button>
+                    <button class="btn-delete" onclick="removerItem('${item.id}')">🗑️</button>
+                </td>
+            `;
+        }
+        linha.innerHTML = html;
+        tabelaCorpo.appendChild(linha);
+    });
+}
+
+async function ordenarTabela(coluna) {
+    const { data: { session } } = await _supabase.auth.getSession();
+    const { data, error } = await _supabase.from('equipamentos').select('*');
+
+    if (error) return console.error(error);
+
+    // Inverte a direção se clicar na mesma coluna
+    if (colunaAtual === coluna) {
+        ordemDirecao *= -1;
+    } else {
+        ordemDirecao = 1;
+        colunaAtual = coluna;
+    }
+
+    // Lógica de ordenação alfabética
+    data.sort((a, b) => {
+        const valorA = String(a[coluna]).toLowerCase();
+        const valorB = String(b[coluna]).toLowerCase();
+        
+        if (valorA < valorB) return -1 * ordemDirecao;
+        if (valorA > valorB) return 1 * ordemDirecao;
+        return 0;
+    });
+
+    // Redesenha a tabela com os dados ordenados
+    renderizarTabelaOrdenada(data, session);
 }

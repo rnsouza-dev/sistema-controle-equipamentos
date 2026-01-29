@@ -171,3 +171,12 @@ td button {
     padding: 5px 10px !important;
     font-size: 12px !important;
 }
+
+th[onclick] {
+    transition: background 0.3s;
+}
+
+th[onclick]:hover {
+    background-color: #334155 !important; /* Cor levemente mais clara no tema escuro */
+    color: var(--accent-blue);
+}
