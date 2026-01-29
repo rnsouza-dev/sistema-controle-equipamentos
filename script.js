@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { data: { session } } = await _supabase.auth.getSession();
     configurarInterface(session);
     carregarDados();
-    atualizarGrafico()
+    atualizarDashboard()
 });
 
 // FUNÇÕES DE AUTENTICAÇÃO
@@ -72,7 +72,7 @@ async function carregarDados() {
 // EVENTO SUBMIT
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    atualizarGrafico()
+    atualizarDashboard()
 
 
     const dados = {
@@ -149,7 +149,7 @@ async function removerItem(id) {
         } else {
             await registrarLog("EXCLUSÃO", "ID: " + id);    
             await carregarDados();
-            await atualizarGrafico();
+            await atualizarDashboard();
         }
     }
 }
@@ -180,47 +180,28 @@ if (inputBusca) {
 
 let meuGrafico = null; // Guarda a instância do gráfico para podermos atualizar
 
-async function atualizarGrafico() {
+async function atualizarDashboard() {
     const { data, error } = await _supabase.from('equipamentos').select('turno');
     
-    if (error) return console.error("Erro ao carregar dados do gráfico:", error);
+    if (error) return console.error("Erro ao carregar dashboard:", error);
 
-    // Contagem de colaboradores por turno
     const contagem = {
         'Diarista': 0,
         'Plantonista Noturno': 0,
         'Plantonista Diurno': 0
     };
 
+    // Conta os colaboradores por turno
     data.forEach(item => {
         if (contagem[item.turno] !== undefined) {
             contagem[item.turno]++;
         }
     });
 
-    const ctx = document.getElementById('graficoTurnos').getContext('2d');
-
-    // Se o gráfico já existe, destruímos para criar um novo com dados atualizados
-    if (meuGrafico) meuGrafico.destroy();
-
-    meuGrafico = new Chart(ctx, {
-        type: 'pie', // Gráfico de pizza
-        data: {
-            labels: Object.keys(contagem),
-            datasets: [{
-                data: Object.values(contagem),
-                backgroundColor: ['#38bdf8', '#94a3b8', '#22c55e'], // Azul Neon, Cinza e Verde
-                borderColor: '#1e293b', // Mesma cor do fundo do card para dar efeito de separação
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'bottom' }
-            }
-        }
-    });
+    // Atualiza os números na tela
+    document.getElementById('qtd-diarista').innerText = contagem['Diarista'];
+    document.getElementById('qtd-noturno').innerText = contagem['Plantonista Noturno'];
+    document.getElementById('qtd-diurno').innerText = contagem['Plantonista Diurno'];
 }
 
 function exportarParaExcel() {

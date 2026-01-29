@@ -2,7 +2,6 @@
 <html lang="pt-br">
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Colaboradores</title>
@@ -57,10 +56,21 @@
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <section id="dashboard" style="margin: 20px 0; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <h2>Distribuição por Turno</h2>
-            <div style="max-width: 400px; margin: 0 auto;">
-                <canvas id="graficoTurnos"></canvas>
+        <section id="dashboard">
+            <h2>Resumo de Colaboradores</h2>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <h3>Diarista</h3>
+                    <p id="qtd-diarista">0</p>
+                </div>
+                <div class="card">
+                    <h3>Plantonista Noturno</h3>
+                    <p id="qtd-noturno">0</p>
+                </div>
+                <div class="card">
+                    <h3>Plantonista Diurno</h3>
+                    <p id="qtd-diurno">0</p>
+                </div>
             </div>
         </section>
         <section id="lista">
