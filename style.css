@@ -1,142 +1,115 @@
 :root {
-    --primary-color: #0056b3; /* Azul Hosplog */
-    --secondary-color: #28a745; /* Verde Sucesso */
-    --danger-color: #dc3545;
-    --warning-color: #ffc107;
-    --bg-color: #f8f9fa;
-    --card-bg: #ffffff;
-    --text-color: #333;
-    --border-radius: 8px;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --bg-body: #0f172a;          /* Fundo azul marinho muito escuro */
+    --bg-card: #1e293b;          /* Fundo dos cartões/seções */
+    --accent-blue: #38bdf8;      /* Azul neon para detalhes */
+    --accent-hover: #0ea5e9;     /* Azul mais escuro para hover */
+    --text-main: #f1f5f9;        /* Texto quase branco */
+    --text-muted: #94a3b8;       /* Texto cinza para descrições */
+    --border-color: #334155;     /* Cor das bordas */
+    --success: #22c55e;
+    --danger: #ef4444;
+    --radius: 12px;
 }
 
 body {
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
     margin: 0;
     padding: 20px;
-    line-height: 1.6;
 }
 
+/* Layout do Header */
 header {
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    margin-bottom: 30px;
+    background: var(--bg-card);
+    padding: 20px 40px;
+    border-radius: var(--radius);
+    border-bottom: 2px solid var(--accent-blue);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 30px;
 }
 
 header h1 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: var(--primary-color);
+    color: var(--accent-blue);
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-main {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* Estilização dos Cards e Seções */
+/* Seções e Cards */
 section {
-    background: var(--card-bg);
+    background: var(--bg-card);
     padding: 25px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
     margin-bottom: 25px;
 }
 
 h2 {
-    margin-top: 0;
-    font-size: 1.2rem;
-    border-bottom: 2px solid var(--bg-color);
-    padding-bottom: 10px;
-    color: var(--primary-color);
+    color: var(--accent-blue);
+    font-size: 1.1rem;
+    margin-bottom: 20px;
 }
 
-/* Formulário Moderno */
-form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    align-items: end;
-}
-
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
+/* Inputs Estilizados */
 input, select {
+    background: #0f172a;
+    border: 1px solid var(--border-color);
+    color: white;
     padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-    transition: border-color 0.3s;
+    border-radius: 6px;
+    transition: 0.3s;
 }
 
-input:focus, select:focus {
-    border-color: var(--primary-color);
+input:focus {
+    border-color: var(--accent-blue);
     outline: none;
-    box-shadow: 0 0 0 2px rgba(0,86,179,0.1);
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
 }
 
-/* Botões */
-button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.1s, opacity 0.2s;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-button:active { transform: scale(0.98); }
-button:hover { opacity: 0.9; }
-
-.btn-add { background-color: var(--secondary-color); color: white; }
-.btn-export { background-color: #1d6f42; color: white; }
-.btn-login { background-color: var(--primary-color); color: white; }
-
-/* Tabela Profissional */
-.table-container {
-    overflow-x: auto;
-}
-
+/* Tabela em Tema Escuro */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
 }
 
 th {
-    background-color: var(--bg-color);
-    color: var(--primary-color);
-    text-align: left;
+    background: #334155;
+    color: var(--accent-blue);
     padding: 15px;
-    font-weight: 600;
-    border-bottom: 2px solid #eee;
+    text-align: left;
 }
 
 td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #eee;
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
 }
 
-tr:hover { background-color: #fcfcfc; }
+tr:hover {
+    background: #2d3e50;
+}
 
-/* Dashboard */
-#dashboard {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+/* Botões Modernos */
+button {
+    background: var(--accent-blue);
+    color: #0f172a;
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+}
+
+.btn-modelo button {
+    background: transparent;
+    border: 1px solid var(--accent-blue);
+    color: var(--accent-blue);
 }

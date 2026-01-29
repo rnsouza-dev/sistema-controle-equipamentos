@@ -209,7 +209,8 @@ async function atualizarGrafico() {
             labels: Object.keys(contagem),
             datasets: [{
                 data: Object.values(contagem),
-                backgroundColor: ['#007bff', '#333333', '#28a745'], // Cores para cada turno
+                backgroundColor: ['#38bdf8', '#94a3b8', '#22c55e'], // Azul Neon, Cinza e Verde
+                borderColor: '#1e293b', // Mesma cor do fundo do card para dar efeito de separação
                 borderWidth: 1
             }]
         },
