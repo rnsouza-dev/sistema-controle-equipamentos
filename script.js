@@ -37,7 +37,10 @@ async function fazerLogin() {
 
 async function fazerLogout() {
     await _supabase.auth.signOut();
-    location.reload();
+    // Em vez de recarregar a página toda, limpamos a interface
+    configurarInterface(null);
+    carregarDados();
+    atualizarDashboard();
 }
 
 function configurarInterface(session) {
@@ -98,7 +101,7 @@ async function carregarDados() {
         if (session) {
             html += `
                 <td>
-                    <button class="btn-edit" onclick="editarItem('${item.id}', '${item.nome}', '${item.usuario}', '${item.setor}', '${item.turno}')">✏️</button>
+                    <button class="btn-edit" onclick="prepararEdicao('${item.id}', '${item.nome}', '${item.usuario}', '${item.setor}', '${item.turno}')">✏️</button>
                     <button class="btn-delete" onclick="removerItem('${item.id}')">🗑️</button>
                 </td>
             `;
@@ -164,21 +167,6 @@ async function prepararEdicao(id, nome, usuario, setor, turno) {
     idEdicao = id; 
     form.querySelector('button').innerText = "Salvar Alterações";
     form.scrollIntoView({ behavior: 'smooth' }); 
-}
-
-// FUNÇÃO ADICIONAR LINHA
-function adicionarLinhaTabela(item) {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-        <td>${item.nome}</td>
-        <td>${item.usuario}</td>
-        <td>${item.setor}</td> <td>${item.turno}</td>
-        <td>
-            <button onclick="prepararEdicao(${item.id}, '${item.nome}', '${item.usuario}', '${item.setor}', '${item.turno}')" style="background-color: #ffc107; color: black; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; margin-right: 5px;">Editar</button>
-            <button onclick="removerItem(${item.id})" style="background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Excluir</button>
-        </td>
-    `;
-    tabelaCorpo.appendChild(tr);
 }
 
 async function removerItem(id) {

@@ -154,3 +154,20 @@ button:hover {
     margin: 10px 0 0 0;
     text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
 }
+
+/* Cores dos botões de ação na tabela */
+.btn-edit {
+    background-color: #ffc107 !important; /* Amarelo */
+    color: black !important;
+    margin-right: 5px;
+}
+
+.btn-delete {
+    background-color: #ef4444 !important; /* Vermelho */
+    color: white !important;
+}
+
+td button {
+    padding: 5px 10px !important;
+    font-size: 12px !important;
+}
