@@ -291,14 +291,21 @@ document.getElementById('inputImportar').addEventListener('change', function(e) 
 });
 
 async function processarImportacao(lista) {
-    // ... mapeamento de dados ...
+    // Mapeia os dados da planilha para as colunas do banco
+    const dadosFormatados = lista.map(item => ({
+        nome: item.Nome || item.nome,
+        usuario: item.Usuário || item.Usuario || item.usuario,
+        setor: item.Setor || item.setor,
+        turno: item.Turno || item.turno
+    }));
+
     const { error } = await _supabase.from('equipamentos').insert(dadosFormatados);
 
     if (error) {
-        mostrarToast("Falha na importação. Verifique o arquivo.", "error"); // Substituído
+        mostrarToast("Falha na importação. Verifique o arquivo.", "error");
     } else {
         await registrarLog("IMPORTAÇÃO EM MASSA", `${dadosFormatados.length} registros`);
-        mostrarToast(`${dadosFormatados.length} colaboradores importados com sucesso!`); // Substituído
+        mostrarToast(`${dadosFormatados.length} colaboradores importados com sucesso!`);
         carregarDados();
         atualizarDashboard();
         document.getElementById('inputImportar').value = ""; 
