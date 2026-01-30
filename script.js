@@ -375,9 +375,10 @@ function mostrarToast(mensagem, tipo = 'success') {
 }
 
 async function filtrarPorTurno(turnoSelecionado) {
+    const corpoTabela = document.getElementById('tabela-corpo'); // Captura garantida
     const { data: { session } } = await _supabase.auth.getSession();
     
-    // Busca apenas os colaboradores do turno clicado
+    // Busca os dados filtrados
     const { data, error } = await _supabase
         .from('equipamentos')
         .select('*')
@@ -388,8 +389,15 @@ async function filtrarPorTurno(turnoSelecionado) {
         return;
     }
 
-    // Reutiliza sua lógica de desenho da tabela
-    tabelaCorpo.innerHTML = "";
+    // Limpa a tabela atual
+    corpoTabela.innerHTML = "";
+
+    if (data.length === 0) {
+        mostrarToast(`Nenhum colaborador no turno: ${turnoSelecionado}`, "error");
+        return;
+    }
+
+    // Redesenha as linhas filtradas
     data.forEach(item => {
         const linha = document.createElement('tr');
         let html = `
@@ -408,7 +416,7 @@ async function filtrarPorTurno(turnoSelecionado) {
             `;
         }
         linha.innerHTML = html;
-        tabelaCorpo.appendChild(linha);
+        corpoTabela.appendChild(linha);
     });
 
     mostrarToast(`Filtrado por: ${turnoSelecionado}`);
