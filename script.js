@@ -373,3 +373,43 @@ function mostrarToast(mensagem, tipo = 'success') {
         setTimeout(() => toast.remove(), 500);
     }, 3000);
 }
+
+async function filtrarPorTurno(turnoSelecionado) {
+    const { data: { session } } = await _supabase.auth.getSession();
+    
+    // Busca apenas os colaboradores do turno clicado
+    const { data, error } = await _supabase
+        .from('equipamentos')
+        .select('*')
+        .eq('turno', turnoSelecionado);
+
+    if (error) {
+        mostrarToast("Erro ao filtrar dados", "error");
+        return;
+    }
+
+    // Reutiliza sua lógica de desenho da tabela
+    tabelaCorpo.innerHTML = "";
+    data.forEach(item => {
+        const linha = document.createElement('tr');
+        let html = `
+            <td>${item.nome}</td>
+            <td>${item.usuario}</td>
+            <td>${item.setor}</td>
+            <td>${item.turno}</td>
+        `;
+
+        if (session) {
+            html += `
+                <td>
+                    <button class="btn-edit" onclick="prepararEdicao('${item.id}', '${item.nome}', '${item.usuario}', '${item.setor}', '${item.turno}')">✏️</button>
+                    <button class="btn-delete" onclick="removerItem('${item.id}')">🗑️</button>
+                </td>
+            `;
+        }
+        linha.innerHTML = html;
+        tabelaCorpo.appendChild(linha);
+    });
+
+    mostrarToast(`Filtrado por: ${turnoSelecionado}`);
+}

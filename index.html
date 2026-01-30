@@ -59,21 +59,24 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <section id="dashboard">
-            <h2>Resumo de Colaboradores</h2>
+            <h2>Resumo de Colaboradores (Clique para filtrar)</h2>
             <div class="dashboard-cards">
-                <div class="card">
+                <div class="card" onclick="filtrarPorTurno('Diarista')" style="cursor: pointer;">
                     <h3>Diarista</h3>
                     <p id="qtd-diarista">0</p>
                 </div>
-                <div class="card">
+                <div class="card" onclick="filtrarPorTurno('Plantonista Noturno')" style="cursor: pointer;">
                     <h3>Plantonista Noturno</h3>
                     <p id="qtd-noturno">0</p>
                 </div>
-                <div class="card">
+                <div class="card" onclick="filtrarPorTurno('Plantonista Diurno')" style="cursor: pointer;">
                     <h3>Plantonista Diurno</h3>
                     <p id="qtd-diurno">0</p>
                 </div>
             </div>
+            <button onclick="carregarDados()" style="margin-top: 15px; background: transparent; border: 1px solid var(--accent-blue); color: var(--accent-blue); font-size: 0.8rem;">
+                Resetar Filtros
+            </button>
         </section>
         <section id="lista">
     <h2>Colaboradores Cadastrados</h2>

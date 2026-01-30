@@ -218,3 +218,9 @@ th[onclick]:hover {
     transform: translateX(100%);
     transition: all 0.5s ease-out;
 }
+
+.card:active {
+    transform: scale(0.95);
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+}
